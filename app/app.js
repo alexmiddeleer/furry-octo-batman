@@ -26,11 +26,18 @@ angular.module('myApp')
    }])
 ;
 
-angular.module('myAppControllers', ['Game', 'Logger']);
+angular.module('myAppControllers', ['Game', 'Logger', 'Ui']);
 angular.module('myAppControllers')
-   .controller('viewCtrl', function($scope, $sce, Game, Logger, Grid) {
+   .controller('viewCtrl', function($scope, $sce, Game, Logger, Grid, WebUi) {
 
-      Game.init()
+      $scope.messages = [];
+      WebUi.setMessageHandler( function(message) {
+         $scope.messages.unshift(message);
+      });
+
+      WebUi.init();
+
+      // This is weird. probably needs a refactor.
       Game.styleSquares( function(square) {
          square.background = Game.isBlack( square ) ?
             'black-space' : 'white-space';
@@ -48,13 +55,8 @@ angular.module('myAppControllers')
          }
       }
 
-      $scope.squareClicked = function(square) {
-         Logger.log(square.x + ', ' + square.y +  ' was clicked');
-         Game.pieceChosen(square);
-      }
+      $scope.squareClicked = WebUi.squareClicked;
 
-      Game.startGame();
-      $scope.message = 'It is ' + Game.whoseTurn().name + '\'s turn.';
 
       var roundOverCB = function() {
          $scope.message = 'It is ' + Game.whoseTurn().name + '\'s turn.';

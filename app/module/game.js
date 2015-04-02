@@ -8,8 +8,8 @@ angular.module('Game').constant('WHITE_PIECE', '\u26C0')
                       .constant('NUM_PLAYERS', 2)
                       .constant('WHITE_PLAYER', 'White Player')
                       .constant('BLACK_PLAYER', 'Black Player')
-angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING, 
-   BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS, 
+angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
+   BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS,
    Logger, Player, WHITE_PLAYER, BLACK_PLAYER) {
    var ex = {}
      , that = {}
@@ -21,7 +21,7 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
    }
 
    ex.init = function() {
-      Grid.init(BOARDSIZE);      
+      Grid.init(BOARDSIZE);
       return this;
    }
 
@@ -64,7 +64,7 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
       that.players = [{
          name: WHITE_PLAYER,
       },{
-         name: BLACK_PLAYER 
+         name: BLACK_PLAYER
       }];
       that.turn = 0;
    }
@@ -124,7 +124,6 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
                square.piece.isSelected = false;
             }
          });
-         Logger.log(ex.getGrid());
       }
    }
 
@@ -142,7 +141,7 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
    }
 
    ex.isKing = function(square) {
-      return square.piece && square.piece.symbol && (square.piece.symbol === BLACK_KING || 
+      return square.piece && square.piece.symbol && (square.piece.symbol === BLACK_KING ||
              square.piece.symbol === WHITE_KING );
    }
 

@@ -25,6 +25,7 @@ angular.module('Grid').service('Grid', function() {
             f(that.grid[x][y]);
          }
       }
+      return this;
    }
 
    return exports;

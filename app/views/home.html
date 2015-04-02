@@ -1,11 +1,17 @@
 <button class="button" >Start Game</button>
 <br>
 <br>
+<button class="button" >End Turn</button>
+<br>
+<br>
    <!-- 
       <span ng-init="board.mouseCoords=[-1,-1]">{{board.mouseCoords}}</span>
     -->
+<div class="message-board">
+   <span ng-repeat="message in messages">{{message}}<br></span>
+</div>
+<br>
 <div class="game" ng-controller="BoardController as board">
-   <div>{{message}}</div>
    <div class="grid">
       <div class="grid-row" ng-repeat="row in grid">
          <div ng-bind-html="getSymbol(square.piece.symbol)" 
