@@ -1,32 +1,12 @@
-angular.module('Game', ['myApp', 'Grid', 'Logger', 'Player']);
-angular.module('Game').constant('WHITE_PIECE', '\u26C0')
-                      .constant('WHITE_KING', '\u26C1')
-                      .constant('BLACK_PIECE', '\u26C2')
-                      .constant('BLACK_KING', '\u26C3')
-                      .constant('BLACK_WINS', 1)
-                      .constant('WHITE_WINS', 2)
-                      .constant('NUM_PLAYERS', 2)
-                      .constant('WHITE_PLAYER', 'White Player')
-                      .constant('BLACK_PLAYER', 'Black Player')
-angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
-   BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS,
-   Logger, Player, WHITE_PLAYER, BLACK_PLAYER) {
+angular.module('Game', ['myApp', 'Grid', 'Logger']);
+angular.module('Game').service('Game', function(Grid, Logger,  
+   WHITE_PIECE, WHITE_KING, BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS,
+   WHITE_PLAYER, BLACK_PLAYER) {
    var ex = {}
      , that = {}
 
-   ex.isBlack = function(square) {
-      var x = square.x, y = square.y;
-      var k = ( y % 2 === 0 ? 0 : 1 );
-      return (((y*BOARDSIZE)+x+k)%2 === 0);
-   }
-
    ex.init = function() {
       Grid.init(BOARDSIZE);
-      return this;
-   }
-
-   ex.styleSquares = function( styleFunc ) {
-      Grid.forEach( styleFunc );
       return this;
    }
 
@@ -47,6 +27,12 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
             }
          }
       });
+   }
+
+   ex.isBlack = function(square) {
+      var x = square.x, y = square.y;
+      var k = ( y % 2 === 0 ? 0 : 1 );
+      return (((y*BOARDSIZE)+x+k)%2 === 0);
    }
 
    that.hasBlackPiece = function(square) {
@@ -87,7 +73,6 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
 
    that.makeMove = function(player, cb) {
       Logger.log('Waiting for ' + player.name + ' to make a move');
-      //Player.requestMove();
    }
 
    ex.gameLoop = function(roundOverCB, gameOverCB) {
