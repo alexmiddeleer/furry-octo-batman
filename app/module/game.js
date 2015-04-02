@@ -57,8 +57,6 @@ angular.module('Game').service('Game', function(Grid, WHITE_PIECE, WHITE_KING,
       return square.piece && square.piece.symbol === WHITE_PIECE;
    }
 
-   ex.getGrid = Grid.getGrid;
-
    ex.startGame = function() {
       that.setUpPieces();
       that.players = [{
