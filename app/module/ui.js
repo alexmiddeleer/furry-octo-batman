@@ -13,7 +13,7 @@ angular.module('Ui').service('Ui', function(Logger, Game) {
 
    ex.startGame = function() {}
    ex.endTurn = function() {}
-   ex.squareSelected = function() {
+   ex.squareSelected = function(square) {
       Game.pieceChosen(square);
    }
    ex.setMessageHandler = function(f) {
@@ -33,7 +33,7 @@ angular.module('Ui').service('WebUi', function(Logger, Ui) {
    var ex = Ui
      , that = {}
 
-   var squareClicked = function(square) {
+   ex. squareClicked = function(square) {
       Ui.squareSelected(square);
    }
 

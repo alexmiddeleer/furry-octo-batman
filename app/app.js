@@ -36,6 +36,7 @@ angular.module('myAppControllers')
       });
 
       WebUi.init();
+      $scope.squareClicked = WebUi.squareClicked;
 
       // This is weird. probably needs a refactor.
       Game.styleSquares( function(square) {
@@ -54,8 +55,6 @@ angular.module('myAppControllers')
             return 'selectable-space';
          }
       }
-
-      $scope.squareClicked = WebUi.squareClicked;
 
 
       var roundOverCB = function() {
