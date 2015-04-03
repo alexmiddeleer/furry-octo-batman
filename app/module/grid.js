@@ -19,6 +19,11 @@ angular.module('Grid').service('Grid', function() {
       return that.grid;
    }
 
+   exports.setGrid = function(grid) {
+      that.grid = grid;
+      return that.grid;
+   }
+
    exports.forEach = function(f) {
       for (var y = 0; y < that.size; y++) {
          for (var x = 0; x < that.size; x++) {

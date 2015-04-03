@@ -34,7 +34,7 @@ angular.module('Ui').service('Ui', function(Logger, Game,
    }
 
    ex.squareSelected = function(square) {
-      Game.pieceChosen(square);
+      Game.squareChosen(square);
    }
    ex.setMessageHandler = function(f) {
       that.messageHandler = f;

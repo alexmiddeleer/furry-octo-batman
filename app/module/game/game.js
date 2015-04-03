@@ -1,5 +1,5 @@
 angular.module('Game', ['myApp', 'Grid', 'Logger']);
-angular.module('Game').service('Game', function(Grid, Logger,  
+angular.module('Game').service('Game', function(Grid, Logger, Move,
    WHITE_PIECE, WHITE_KING, BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS,
    WHITE_PLAYER, BLACK_PLAYER) {
    var ex = {}
@@ -90,33 +90,37 @@ angular.module('Game').service('Game', function(Grid, Logger,
       }
    }
 
-   ex.pieceChosen = function(square) {
-      if (ex.pieceIsMoveable(square)) {
-         Grid.forEach(function(square) {
-            if (square.piece) {
-               square.piece.isSelected = false;
+
+   ex.squareChosen = function(square) {
+      // If piece, and piece is moveable (implies owned), if piece is not current piece, 
+      //    mark piece as chosen and reset current move.
+      // If empty square is chosen, and a piece is selected, and the square is reachable 
+      //    from the selected piece's current location, move piece and add to current move
+      if (ex.isOccupied(square)) {
+         if (ex.pieceIsMoveable(square.piece)) {
+            Move.startOverMove();
+            Move.selectSquare(square);
+         }
+      } else {
+         var selectedSquare = Move.getSelectedSquare()
+         if (selectedSquare) {
+            if (ex.squareIsReachable(square)) {
+               if (that.squareIsReachableByMove(square)) {
+                  Move.executeMovement(square);
+               } else {
+                  Move.jumpPieceTo(square);
+               }
             }
-         });
-         square.piece.isSelected = true;
-         that.selectedPiece = square;
-      } else if ( ex.squareIsReachable(square)){
-         square.piece = angular.copy(that.selectedPiece.piece);
-         that.selectedPiece.piece = null;
-         Grid.forEach(function(square) {
-            if (square.piece) {
-               square.piece.isSelected = false;
-            }
-         });
+         }
       }
    }
 
-   ex.pieceIsMoveable = function(square) {
-      if (square.piece && square.piece.owner) {
-         if (square.piece.owner === ex.whoseTurn().name) {
-            return true;
-         }
-      }
-      return false;
+   that.playerOwnsPiece =  function(piece) {
+      return piece.owner && (piece.owner === ex.whoseTurn().name);
+   }
+
+   ex.pieceIsMoveable = function(piece) {
+      return that.playerOwnsPiece(piece);
    }
 
    ex.whoseTurn = function() {
@@ -140,29 +144,40 @@ angular.module('Game').service('Game', function(Grid, Logger,
       }
    }
 
-   ex.moveIsDiagonal = function(square) {
-      var x2 = that.selectedPiece.x - square.x
-        , y2 = that.selectedPiece.y - square.y
+   ex.moveIsDiagonal = function(square, selected) {
+      var x2 = selected.x - square.x
+        , y2 = selected.y - square.y
       return (((x2 + y2) % 2 ) === 0) &&
              (Math.abs(x2) + Math.abs(y2) < 3)
    }
 
-   ex.moveIsDiagonalForward = function(square) {
-      var x2 = that.selectedPiece.x - square.x
-        , y2 = that.selectedPiece.y - square.y
-      return ex.moveIsDiagonal(square) && (y2 === ex.playerDir());
+   ex.moveIsDiagonalForward = function(square, selected) {
+      var x2 = selected.x - square.x
+        , y2 = selected.y - square.y
+      return ex.moveIsDiagonal(square, selected) && (y2 === ex.playerDir());
    }
 
-   ex.squareIsReachable = function(square) {
-      if (that.selectedPiece) {
+   that.squareIsReachableByMove = function(square) {
+      var selected = Move.getSelectedSquare();
+      if (selected){
          if (!ex.isOccupied(square)) {
-            if (ex.isKing(square)) {
-               return ex.moveIsDiagonal(square);
-            } else {
-               return ex.moveIsDiagonalForward(square);
+            if (!Move.hasMoved()) {
+               if (ex.isKing(square)) {
+                  return ex.moveIsDiagonal(square, selected);
+               } else {
+                  return ex.moveIsDiagonalForward(square, selected);
+               }
             }
          }
       }
+   }
+
+   that.squareIsReachableByJump = function(square) {
+      return false;
+   }
+
+   ex.squareIsReachable = function(square) {
+      return that.squareIsReachableByMove(square) || that.squareIsReachableByJump(square);
    }
 
    return ex;

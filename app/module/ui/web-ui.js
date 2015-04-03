@@ -17,14 +17,14 @@ angular.module('Ui').service('WebUi', function(Logger, Ui, Grid, Game) {
    }
 
    ex.getSquareBackground = function(square){
-      if (Game.pieceIsMoveable(square) && square.piece.isSelected) {
-         return 'selected-space';
-      }
-      if (Game.pieceIsMoveable(square) && square.mouseOver) {
-         return 'selectable-space';
-      }
-      if (Game.squareIsReachable(square) && square.mouseOver) {
-         return 'selectable-space';
+      if (Game.isOccupied(square)) {
+         if (square.piece.isSelected) {
+            return 'selected-space';
+         } else if(Game.pieceIsMoveable(square.piece) && square.mouseOver) {
+            return 'selectable-space';
+         } else if(Game.squareIsReachable(square) && square.mouseOver) {
+            return 'selectable-space';
+         }
       }
    }
 
