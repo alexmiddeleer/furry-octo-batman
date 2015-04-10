@@ -110,10 +110,10 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
             if (ex.squareIsReachable(square)) {
                if (that.squareIsReachableByMove(square)) {
                   Move.executeMovement(square);
+                  that.moveOverHandler();
                } else {
                   Move.executeJump(square);
                }
-               that.moveOverHandler();
             }
          }
       }
@@ -193,12 +193,10 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       var selected = Move.getSelectedSquare();
       if (selected){
          if (!ex.isOccupied(square)) {
-            if (!Move.hasMoved()) {
-               if (ex.isKing(square)) {
-                  return ex.jumpIsDiagonal(square, selected);
-               } else {
-                  return ex.jumpIsDiagonalForward(square, selected);
-               }
+            if (ex.isKing(square)) {
+               return ex.jumpIsDiagonal(square, selected);
+            } else {
+               return ex.jumpIsDiagonalForward(square, selected);
             }
          }
       }
