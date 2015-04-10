@@ -28,14 +28,16 @@ angular.module('myApp')
 
 angular.module('myAppControllers', ['Game', 'Logger', 'Ui']);
 angular.module('myAppControllers')
-   .controller('viewCtrl', function($scope, $sce, Game, Logger, Grid, WebUi) {
+   .controller('viewCtrl', function($scope, $sce, Game, Logger, WebUi) {
       $scope.messages = [];
       WebUi.setMessageHandler( function(message) {
          $scope.messages.unshift(message);
       });
+      WebUi.onModelUpdate( function( grid ) {
+         $scope.grid = grid;
+      });
       WebUi.init();
       WebUi.styleBackground();
-      $scope.grid = Grid.getGrid();
       $scope.squareClicked = WebUi.squareClicked;
       $scope.getSquareBackground = WebUi.getSquareBackground;
       $scope.getSymbol = function(square) {

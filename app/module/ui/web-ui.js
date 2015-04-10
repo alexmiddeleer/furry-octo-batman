@@ -28,6 +28,11 @@ angular.module('Ui').service('WebUi', function(Logger, Ui, Grid, Game) {
       }
    }
 
+   ex.getGrid = function() {
+      return Grid.getGrid();
+      return this;
+   }
+
    return ex;
 });
 

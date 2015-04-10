@@ -24,6 +24,7 @@ angular.module('Ui').service('Ui', function(Logger, Game,
       Game.init();
       Game.startGame();
       ex.showMessage('It is ' + Game.whoseTurn().name + '\'s turn.');
+      that.modelUpdateHandler(Game.getModel());
       Game.gameLoop( that.turnOver, that.gameOver );
    }
 
@@ -36,8 +37,15 @@ angular.module('Ui').service('Ui', function(Logger, Game,
    ex.squareSelected = function(square) {
       Game.squareChosen(square);
    }
+
    ex.setMessageHandler = function(f) {
       that.messageHandler = f;
+      return this;
+   }
+
+   ex.onModelUpdate = function(f) {
+      that.modelUpdateHandler = f;
+      return this;
    }
 
    // Outgoing interactions

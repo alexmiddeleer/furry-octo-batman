@@ -1,0 +1,9 @@
+// An example checkers game in json format
+{
+   "id":"asdasd",
+   "whoseTurn":"white",
+   "board": [[{
+      "empty":false,
+      "piece":"black_king"
+   },...]...]
+}

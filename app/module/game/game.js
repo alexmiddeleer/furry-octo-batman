@@ -180,5 +180,9 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       return that.squareIsReachableByMove(square) || that.squareIsReachableByJump(square);
    }
 
+   ex.getModel = function() {
+      return Grid.getGrid();
+   }
+
    return ex;
 });
