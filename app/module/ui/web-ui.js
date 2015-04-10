@@ -20,11 +20,12 @@ angular.module('Ui').service('WebUi', function(Logger, Ui, Grid, Game) {
       if (Game.isOccupied(square)) {
          if (square.piece.isSelected) {
             return 'selected-space';
-         } else if(Game.pieceIsMoveable(square.piece) && square.mouseOver) {
-            return 'selectable-space';
-         } else if(Game.squareIsReachable(square) && square.mouseOver) {
-            return 'selectable-space';
-         }
+         } 
+         //else if(Game.pieceIsMoveable(square.piece) && square.mouseOver) {
+         //   return 'selectable-space';
+         //} else if(Game.squareIsReachable(square) && square.mouseOver) {
+         //   return 'selectable-space';
+         //}
       }
    }
 

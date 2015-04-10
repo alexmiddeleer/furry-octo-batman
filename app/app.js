@@ -35,6 +35,7 @@ angular.module('myAppControllers')
       });
       WebUi.onModelUpdate( function( grid ) {
          $scope.grid = grid;
+         WebUi.styleBackground();
       });
       WebUi.init();
       WebUi.styleBackground();

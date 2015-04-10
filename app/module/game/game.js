@@ -86,6 +86,7 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
          Move.setInitialState( Grid.getGrid() );
          that.setMoveOverHandler( player, function(move) {
             Logger.log('Waiting for ' + player.name + ' to make a move');
+            Move.deselect();
             that.turn++;
             roundOverCB();
             ex.gameLoop(roundOverCB, gameOverCB);
@@ -203,8 +204,12 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
    }
 
    ex.squareIsReachable = function(square) {
-      return ( that.squareIsReachableByMove(square) ||
-               that.squareIsReachableByJump(square));
+      var selectedSquare = Move.getSelectedSquare()
+      if (selectedSquare) {
+         return ( that.squareIsReachableByMove(square) ||
+                  that.squareIsReachableByJump(square));
+      }
+      return false;
    }
 
    ex.getModel = function() {

@@ -15,6 +15,11 @@ angular.module('Game').service('Move', function(Grid, $rootScope){
       that.movementsCount = 0;
    }
 
+   ex.deselect = function() {
+      that.selectedSquare.piece.isSelected = false;
+      that.selectedSquare = null;
+   }
+
    ex.selectSquare = function(square) {
       if (that.selectedSquare && that.selectedSquare.piece) {
          that.selectedSquare.piece.isSelected = false;
