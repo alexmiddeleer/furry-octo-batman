@@ -1,7 +1,8 @@
 angular.module('Game', ['myApp', 'Grid', 'Logger']);
 angular.module('Game').service('Game', function(Grid, Logger, Move,
-   WHITE_PIECE, WHITE_KING, BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS, NUM_PLAYERS,
-   WHITE_PLAYER, BLACK_PLAYER) {
+   WHITE_PIECE, WHITE_KING, BLACK_PIECE, BLACK_KING, BOARDSIZE, BLACK_WINS, WHITE_WINS,
+   NUM_PLAYERS, WHITE_PLAYER, BLACK_PLAYER) {
+
    var ex = {}
      , that = {}
 
@@ -71,8 +72,8 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       return false;
    }
 
-   that.makeMove = function(player, cb) {
-      Logger.log('Waiting for ' + player.name + ' to make a move');
+   that.setMoveOverHandler = function(player, cb) {
+      that.moveOverHandler = cb;
    }
 
    ex.gameLoop = function(roundOverCB, gameOverCB) {
@@ -82,20 +83,22 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
          return this;
       } else {
          var player = ex.whoseTurn();
-         that.makeMove( player, function(move) {
+         Move.setInitialState( Grid.getGrid() );
+         that.setMoveOverHandler( player, function(move) {
+            Logger.log('Waiting for ' + player.name + ' to make a move');
             that.turn++;
             roundOverCB();
-            ex.gameLoop();
+            ex.gameLoop(roundOverCB, gameOverCB);
          });
       }
    }
 
-
    ex.squareChosen = function(square) {
-      // If piece, and piece is moveable (implies owned), if piece is not current piece, 
+      // If piece, and piece is moveable (implies owned), if piece is not current piece,
       //    mark piece as chosen and reset current move.
-      // If empty square is chosen, and a piece is selected, and the square is reachable 
-      //    from the selected piece's current location, move piece and add to current move
+      // If empty square is chosen, and a piece is selected, and the square is reachable
+      //    from the selected piece's current location, move piece and add to current
+      //    move
       if (ex.isOccupied(square)) {
          if (ex.pieceIsMoveable(square.piece)) {
             Move.startOverMove();
@@ -108,8 +111,9 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
                if (that.squareIsReachableByMove(square)) {
                   Move.executeMovement(square);
                } else {
-                  Move.jumpPieceTo(square);
+                  Move.executeJump(square);
                }
+               that.moveOverHandler();
             }
          }
       }
@@ -144,17 +148,30 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       }
    }
 
-   ex.moveIsDiagonal = function(square, selected) {
+   that.isDiagonal = function(square, selected, distance) {
       var x2 = selected.x - square.x
         , y2 = selected.y - square.y
-      return (((x2 + y2) % 2 ) === 0) &&
-             (Math.abs(x2) + Math.abs(y2) < 3)
+      return ((Math.abs(x2) === distance) && (Math.abs(y2) === distance));
+   }
+
+   ex.moveIsDiagonal = function(square, selected) {
+      return that.isDiagonal(square, selected, 1);
+   }
+
+   ex.jumpIsDiagonal = function(square, selected) {
+      return that.isDiagonal(square, selected, 2);
    }
 
    ex.moveIsDiagonalForward = function(square, selected) {
       var x2 = selected.x - square.x
         , y2 = selected.y - square.y
       return ex.moveIsDiagonal(square, selected) && (y2 === ex.playerDir());
+   }
+
+   ex.jumpIsDiagonalForward = function(square, selected) {
+      var x2 = selected.x - square.x
+        , y2 = selected.y - square.y
+      return ex.jumpIsDiagonal(square, selected) && ((y2/Math.abs(y2)) === ex.playerDir());
    }
 
    that.squareIsReachableByMove = function(square) {
@@ -173,11 +190,23 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
    }
 
    that.squareIsReachableByJump = function(square) {
-      return false;
+      var selected = Move.getSelectedSquare();
+      if (selected){
+         if (!ex.isOccupied(square)) {
+            if (!Move.hasMoved()) {
+               if (ex.isKing(square)) {
+                  return ex.jumpIsDiagonal(square, selected);
+               } else {
+                  return ex.jumpIsDiagonalForward(square, selected);
+               }
+            }
+         }
+      }
    }
 
    ex.squareIsReachable = function(square) {
-      return that.squareIsReachableByMove(square) || that.squareIsReachableByJump(square);
+      return ( that.squareIsReachableByMove(square) ||
+               that.squareIsReachableByJump(square));
    }
 
    ex.getModel = function() {

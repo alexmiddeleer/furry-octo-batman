@@ -19,8 +19,13 @@ angular.module('Grid').service('Grid', function() {
       return that.grid;
    }
 
-   exports.setGrid = function(grid) {
-      that.grid = grid;
+   exports.setGrid = function(newGrid) {
+      var size = Math.min( that.grid.length, newGrid.length );
+      for (var y = 0; y < size; y++) {
+         for (var x = 0; x < size; x++) {
+            angular.copy(newGrid[x][y], that.grid[x][y]);
+         }
+      }
       return that.grid;
    }
 

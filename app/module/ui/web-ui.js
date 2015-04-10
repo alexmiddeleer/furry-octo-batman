@@ -13,7 +13,7 @@ angular.module('Ui').service('WebUi', function(Logger, Ui, Grid, Game) {
       Grid.forEach( function(square) {
          square.background = Game.isBlack( square ) ?
             'black-space' : 'white-space';
-      })
+      });
    }
 
    ex.getSquareBackground = function(square){

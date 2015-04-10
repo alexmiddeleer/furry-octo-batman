@@ -5,11 +5,14 @@ angular.module('Game').service('Move', function(Grid, $rootScope){
    that.movementStack = [];
    that.movementsCount = 0;
 
+   ex.setInitialState = function(grid) {
+      that.initialState = angular.copy(grid);
+   };
+
    ex.startOverMove = function() {
-      //TODO
-      //Grid.setGrid(that.originalGrid);
-      //that.movementStack = [];
-      //that.movementsCount = 0;
+      Grid.setGrid(that.initialState);
+      that.movementStack = [];
+      that.movementsCount = 0;
    }
 
    ex.selectSquare = function(square) {
@@ -42,10 +45,34 @@ angular.module('Game').service('Move', function(Grid, $rootScope){
       ex.selectSquare(square);
    }
 
+   that.deleteJumpedPiece = function(square) {
+      var motion = that.motion(ex.getSelectedSquare(), square);
+      motion.x += motion.x < 0 ? 1 : -1;
+      motion.y += motion.y < 0 ? 1 : -1;
+      x = ex.getSelectedSquare().x + motion.x;
+      y = ex.getSelectedSquare().y + motion.y;
+      square = Grid.getGrid()[y][x];
+      delete(square.piece);
+   }
+
+   that.jumpPiece = function(square) {
+      that.deleteJumpedPiece(square);
+      var pieceToMove = angular.copy(ex.getSelectedSquare().piece);
+      delete that.selectedSquare.piece;
+      square.piece = pieceToMove;
+      ex.selectSquare(square);
+   }
+
    ex.executeMovement = function(square) {
       that.movementStack.push(that.motion(ex.getSelectedSquare(), square));
       that.movementsCount++;
       that.movePiece(square);
+   }
+
+   ex.executeJump = function(square) {
+      that.movementStack.push(that.motion(ex.getSelectedSquare(), square));
+      that.movementsCount++;
+      that.jumpPiece(square);
    }
 
    return ex;
