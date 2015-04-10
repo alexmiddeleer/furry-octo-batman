@@ -53,5 +53,9 @@ angular.module('Ui').service('Ui', function(Logger, Game,
       that.messageHandler && that.messageHandler(message);
    }
 
+   ex.endTurn = function() {
+      Game.endTurn();
+   }
+
    return ex;
 });

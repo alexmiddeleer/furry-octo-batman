@@ -41,6 +41,7 @@ angular.module('myAppControllers')
       WebUi.styleBackground();
       $scope.squareClicked = WebUi.squareClicked;
       $scope.getSquareBackground = WebUi.getSquareBackground;
+      $scope.endTurn = WebUi.endTurn;
       $scope.getSymbol = function(square) {
          return $sce.trustAsHtml( square );
       };

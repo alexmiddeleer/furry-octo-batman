@@ -216,5 +216,14 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       return Grid.getGrid();
    }
 
+   ex.endTurn = function() {
+      if (Move.hasMoved()) {
+         that.moveOverHandler();
+         return true;
+      } else {
+         return false;
+      }
+   }
+
    return ex;
 });
