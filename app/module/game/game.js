@@ -189,9 +189,14 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
       }
    }
 
+   that.squareJumpedHasPiece = function(square) {
+      var jumpedSquare = Move.getJumpedSquare(square);
+      return jumpedSquare.piece;
+   }
+
    that.squareIsReachableByJump = function(square) {
       var selected = Move.getSelectedSquare();
-      if (selected){
+      if (selected && that.squareJumpedHasPiece(square)){
          if (!ex.isOccupied(square)) {
             if (ex.isKing(square)) {
                return ex.jumpIsDiagonal(square, selected);

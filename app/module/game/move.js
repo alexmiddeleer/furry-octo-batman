@@ -50,14 +50,18 @@ angular.module('Game').service('Move', function(Grid, $rootScope){
       ex.selectSquare(square);
    }
 
-   that.deleteJumpedPiece = function(square) {
+   ex.getJumpedSquare = function(square) {
       var motion = that.motion(ex.getSelectedSquare(), square);
       motion.x += motion.x < 0 ? 1 : -1;
       motion.y += motion.y < 0 ? 1 : -1;
       x = ex.getSelectedSquare().x + motion.x;
       y = ex.getSelectedSquare().y + motion.y;
-      square = Grid.getGrid()[y][x];
-      delete(square.piece);
+      return Grid.getGrid()[y][x];
+   }
+
+   that.deleteJumpedPiece = function(square) {
+      var squareToClear = ex.getJumpedSquare(square);
+      delete(squareToClear.piece);
    }
 
    that.jumpPiece = function(square) {
