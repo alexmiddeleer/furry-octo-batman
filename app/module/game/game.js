@@ -111,7 +111,6 @@ angular.module('Game').service('Game', function(Grid, Logger, Move,
             if (ex.squareIsReachable(square)) {
                if (that.squareIsReachableByMove(square)) {
                   Move.executeMovement(square);
-                  that.moveOverHandler();
                } else {
                   Move.executeJump(square);
                }
