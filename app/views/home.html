@@ -8,7 +8,7 @@
       <span ng-init="board.mouseCoords=[-1,-1]">{{board.mouseCoords}}</span>
     -->
 <div class="message-board">
-   <span ng-repeat="message in messages">{{message}}<br></span>
+   <span ng-repeat="message in messages track by $index">{{message}}<br></span>
 </div>
 <br>
 <div class="game" ng-controller="BoardController as board">

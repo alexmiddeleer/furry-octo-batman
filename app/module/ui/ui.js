@@ -6,7 +6,7 @@ angular.module('Ui').service('Ui', function(Logger, Game,
      , that = {}
 
    that.turnOver = function() {
-      ex.showMessage('It is ' + Game.whoseTurn().name + '\'s turn.');
+      that.showStatus();
    }
 
    that.gameOver = function(gameStatus) {
@@ -20,19 +20,19 @@ angular.module('Ui').service('Ui', function(Logger, Game,
       }
    }
 
+   that.showStatus = function() {
+      ex.showMessage('It is ' + Game.whoseTurn().name + '\'s turn.');
+   }
+
    ex.init = function() {
       Game.init();
       Game.startGame();
-      ex.showMessage('It is ' + Game.whoseTurn().name + '\'s turn.');
+      that.showStatus();
       that.modelUpdateHandler(Game.getModel());
       Game.gameLoop( that.turnOver, that.gameOver );
    }
 
    ex.startGame = function() {}
-
-   ex.endTurn = function() {
-      ex.showMessage('It is ' + Game.whoseTurn().name + '\'s turn.');
-   }
 
    ex.squareSelected = function(square) {
       Game.squareChosen(square);
