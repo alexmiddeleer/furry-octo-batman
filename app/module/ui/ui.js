@@ -54,7 +54,10 @@ angular.module('Ui').service('Ui', function(Logger, Game,
    }
 
    ex.endTurn = function() {
-      Game.endTurn();
+      var success = Game.endTurn();
+      if (!success) {
+         ex.showMessage('You can\'t end your turn yet!');
+      };
    }
 
    return ex;
